@@ -210,28 +210,98 @@ void MoveNodeTest() {
 	End(__func__);
 }
 
+void AlternatingSplitTest() {
+	Weclome(__func__);
+
+	Node* myList = nullptr;
+	int a[] = {2, 3, 2, 3, 2, 3, 2};
+
+	int length = sizeof(a) / sizeof(int);
+	for (int i = length - 1; i >= 0; --i) {
+		Push(&myList, a[i]);
+	}
+	printf("Before Split list:\n");
+	printList(myList);
+
+	Node* aHead = nullptr;
+	Node* bHead = nullptr;
+	AlternatingSplit(myList, &aHead, &bHead);
+	printf("After split list:\n");
+	printf("myList is :\n");
+	printList(myList);
+	printf("a list:\n");
+	printList(aHead);
+	printf("b list:\n");
+	printList(bHead);
+
+	End(__func__);
+}
+
+void SortedMergeTest() {
+	Weclome(__func__);
+	Node* aList = nullptr;
+	Node* bList = nullptr;
+	int a[] = {1, 1, 2, 3, 4};
+	int b[] = {3, 4, 4, 5};
+	aList = BuildList(a, LENGTH(a));
+	bList = BuildList(b, LENGTH(b));
+	printf("Before merge list:\n");
+	printf("a list : \n");
+	printList(aList);
+	printf("b list: \n");
+	printList(bList);
+
+	Node* newList = SortedMerge(aList, bList);
+	printf("After merge list:\n");
+	printf("new list : \n");
+	printList(newList);
+	printf("b list: \n");
+	printList(bList);
+	End(__func__);
+}
+
+void MergeSortTest() {
+	Weclome(__func__);
+	Node* myList = nullptr;
+	int a[] = {6, 2, 9, 4, 3, 6, 1, 7, 2};
+	myList = BuildList(a, LENGTH(a));
+	printf("Before merge sort list:\n");
+	printList(myList);
+
+	MergeSort(myList);
+	printf("After merge sort list:\n");
+	printList(myList);
+	End(__func__);
+}
+
+void ShuffleMergeTest() {
+	Weclome(__func__);
+	Node* aList = nullptr;
+	Node* bList = nullptr;
+	int a[] = {1, 2, 3};
+	int b[] = {7, 13, 1};
+	aList = BuildList(a, LENGTH(a));
+	bList = BuildList(b, LENGTH(b));
+
+	printf("Before merge list:\n");
+	printf("a list:\n");
+	printList(aList);
+	printf("b list:\n");
+	printList(bList);
+
+	ShuffleMerge(aList, bList);
+	printf("After merge list:");
+	printf("a list:\n");
+	printList(aList);
+	printf("b list:\n");
+	printList(bList);
+
+
+	End(__func__);
+}
+
 int main()
 {
-	/* stack exapmple
-	MyStack new_stack = MyStack();
-	if (new_stack.isEmpty()) {
-		new_stack.push(1);
-		new_stack.push(3);
-		new_stack.push(5);
-	} else {
-		cout << "WTF" << endl;
-	}
-
-	int stack_size = new_stack.size();
-	cout << "stack size is:" << stack_size << endl;
-	cout << "the stack content is:" << endl;
-	for (int i = 0; i < stack_size; ++i) {
-		cout << new_stack.pop() << endl;
-	}
-
-	return 0;
-	 */
-
 	Node* newList = nullptr;
 	newList = BuildSimpleList();
 
@@ -251,6 +321,10 @@ int main()
 	FrontBackSplitTest();
 	RemoveDuplicatesTest();
 	MoveNodeTest();
+	AlternatingSplitTest();
+	SortedMergeTest();
+	MergeSortTest();
+	ShuffleMergeTest();
 
 	return 0;
 }

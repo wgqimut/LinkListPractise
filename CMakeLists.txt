@@ -3,7 +3,7 @@ project(justp)
 
 set(CMAKE_CXX_STANDARD 11)
 
-set(SOURCE_FILES main.cpp MyStack.h MyLinkList.h LinkListProblem.cpp LinkListProblem.h)
+set(SOURCE_FILES main.cpp LinkListProblem.cpp LinkListProblem.h)
 add_library(justp_lib LinkListProblem.cpp)
 add_executable(justp main.cpp)
 target_link_libraries(justp justp_lib)

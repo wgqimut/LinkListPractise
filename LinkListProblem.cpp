@@ -3,6 +3,7 @@
 //
 #include <stdlib.h>
 #include <cstdio>
+#include <cassert>
 #include "LinkListProblem.h"
 
 void Push(Node** listHead, int newData) {
@@ -22,12 +23,21 @@ Node* BuildSimpleList() {
 	return newList;
 }
 
+Node *BuildList(int *arr, int size) {
+	Node* newList = nullptr;
+	for (int i = size - 1; i >= 0; --i) {
+		Push(&newList, arr[i]);
+	}
+
+	return newList;
+}
+
 
 int Count(Node* head, int searchFor) {
-	Node* cur = head;
+	Node* cur = nullptr;
 	int count = 0;
 
-	for (; cur != nullptr; cur = cur->next) {
+	for (cur = head; cur != nullptr; cur = cur->next) {
 		if (cur->data == searchFor) {
 			count++;
 		}
@@ -87,6 +97,9 @@ void InsertNth(Node **head, int index, int newData) {
 	Node* prev = nullptr;
 	int i = 0;
 
+	/* 这里可以使用 i < index -1, 直接让cur停在要插入的位置的前一个位置即可，不用
+	 * 再使用一个prev记录位置.
+	 */
 	for (i = 0; curPtr != nullptr && i < index; curPtr = curPtr->next, ++i) {
 		prev = curPtr;
 	}
@@ -104,6 +117,21 @@ void InsertNth(Node **head, int index, int newData) {
 	} else {
 		printf("insert failed!!!") ;
 	}
+}
+
+void InsertNth1(Node **head, int index, int newData) {
+	if (index == 0) {
+		Push(head, newData);
+	}
+	Node* curPtr = *head;
+	int i = 0;
+	for (i = 0; i < index - 1; ++i) {
+		assert(curPtr != nullptr);
+		curPtr = curPtr->next;
+	}
+
+	assert(curPtr != nullptr);
+	Push(&(curPtr->next), newData);
 }
 
 void printList(Node* head) {
@@ -140,9 +168,10 @@ void SortedInsert(Node **head, Node *newNode) {
 		if (newNode->data < cur->data) {
 			break;
 		}
-		prev = cur;
+		prev = cur; /* 这里其实不应该维护一个prev指针，用cur->next就可以*/
 	}
 
+	/* 如果一开始将特殊情况先排除掉，那么就不会有这么多的情况*/
 	if (cur) {
 		if(prev) {
 			prev->next = newNode;
@@ -156,6 +185,21 @@ void SortedInsert(Node **head, Node *newNode) {
 		} else {
 			*head = newNode;
 		}
+	}
+}
+
+void SortedInsert1(Node **head, Node *newNode) {
+	Node* cur = *head;
+	Node* prev = nullptr;
+
+	if (cur == nullptr || cur->data >= newNode->data) {
+		newNode->next = *head;
+		*head = newNode;
+	} else {
+		for (; cur->next != nullptr && cur->next->data < newNode->data; cur = cur->next) {
+		}
+		newNode->next = cur->next;
+		cur->next = newNode;
 	}
 }
 
@@ -187,6 +231,21 @@ void Append(Node **aHead, Node **bHead) {
 
 }
 
+void Append1(Node** aHead, Node** bHead) {
+	Node *aCur = *aHead;
+	if (aCur == nullptr) {
+		*aHead = *bHead;
+	} else {
+		while (aCur->next != nullptr) {
+			aCur = aCur->next;
+		}
+		aCur->next = *bHead;
+	}
+
+	*bHead = nullptr;
+
+}
+
 void FrontBackSplit(Node *source, Node **frontHead, Node **backHead) {
 	Node* slowPtr = source;
 	Node* fastPtr = source;
@@ -195,6 +254,9 @@ void FrontBackSplit(Node *source, Node **frontHead, Node **backHead) {
 		return;
 	}
 
+	/* 这里要注意的是，fastPtr前进的时候，必须确保它的下一步(fast->next->next)必须不为空，这样才能使得fast是slow的
+	 * 两倍快，那么为了确保fastPtr->next->next不为nullptr，也就是说，
+	 * fastPtr != nullptr && fast->next != nullptr, fast->next->next != nullptr*/
 	for (; slowPtr != nullptr && fastPtr != nullptr && fastPtr->next != nullptr && fastPtr->next->next != nullptr;
 	       slowPtr = slowPtr->next, fastPtr = fastPtr->next->next) {
 	}
@@ -206,6 +268,24 @@ void FrontBackSplit(Node *source, Node **frontHead, Node **backHead) {
 		*backHead = nullptr;
 	}
 	*frontHead = source;
+}
+
+void FrontBackSplit1(Node *source, Node **frontHead, Node **backHead) {
+	if (source == nullptr || source->next == nullptr) {
+		*frontHead = source;
+		*backHead = nullptr;
+	}
+
+	Node* slow = nullptr;
+	Node* fast = nullptr;
+	for (slow = source, fast = source;
+	     fast != nullptr && fast->next != nullptr && fast->next->next != nullptr;
+	     slow = slow->next, fast = fast->next->next) {
+	}
+
+	*frontHead = source;
+	*backHead = slow->next;
+	slow->next = nullptr;
 }
 
 void RemoveDuplicates(Node *head) {
@@ -242,3 +322,80 @@ void MoveNode(Node **destHead, Node **sourceHead) {
 	}
 }
 
+void AlternatingSplit(Node *source, Node **aHead, Node **bHead) {
+	Node* cur = source;
+	bool front = true;
+	Node* next = nullptr;
+
+	for (; cur != nullptr; cur = next) {
+		next = cur->next;
+		if (front) {
+			MoveNode(aHead, &source);
+			front = false;
+		} else {
+			MoveNode(bHead, &source);
+			front = true;
+		}
+	}
+}
+
+Node *ShuffleMerge(Node *a, Node *b) {
+	if (a == nullptr) {
+		return b;
+	}
+	if (b == nullptr) {
+		return a;
+	}
+	Node* aCur = a;
+	Node* aNext = nullptr;
+	Node* aPrev = nullptr;
+	for (; aCur != nullptr; aCur = aNext) {
+		aNext = aCur->next;
+		aCur->next = b;
+		MoveNode(&aNext, &b);
+		aCur->next = aNext;
+		aPrev = aCur;
+	}
+	aPrev->next = b;
+	return a;
+}
+
+/* have a bug, change the b list */
+Node *SortedMerge(Node *a, Node *b) {
+	if (a == nullptr) {
+		return b;
+	}
+	if (b == nullptr) {
+		return a;
+	}
+
+	Node* bCur = b;
+	Node* prev = nullptr;
+	for (Node *cur = a; cur != nullptr; cur = cur->next) {
+		if (bCur->data < cur->data) {
+			MoveNode(&cur, &bCur);
+			if (prev) {
+				prev->next = cur;
+			} else {
+				a = cur;
+			}
+			return SortedMerge(a, bCur);
+		}
+		prev = cur;
+	}
+	prev->next = bCur;
+	return a;
+}
+
+void MergeSort(Node *head) {
+	if (head == nullptr || head->next == nullptr) {
+		return;
+	}
+
+	Node* frontHead = nullptr;
+	Node* backHead = nullptr;
+	FrontBackSplit(head, &frontHead, &backHead);
+	MergeSort(frontHead);
+	MergeSort(backHead);
+	SortedMerge(frontHead, backHead);
+}

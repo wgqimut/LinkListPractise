@@ -9,9 +9,11 @@ typedef struct Node {
     int data;
     struct Node* next;
 } Node;
+#define LENGTH(arr) (sizeof(arr) / sizeof(int))
 
 void Push(Node** listHead, int newData);
 Node* BuildSimpleList();
+Node *BuildList(int *arr, int size);
 int Count(Node* head, int searchFor);
 int GetNth(Node *head, int index);
 
@@ -28,4 +30,8 @@ void Append(Node **aHead, Node **bHead);
 void FrontBackSplit(Node *source, Node **frontHead, Node **backHead);
 void RemoveDuplicates(Node *head);
 void MoveNode(Node **destHead, Node **sourceHead);
+void AlternatingSplit(Node *source, Node **aHead, Node **bHead);
+Node *SortedMerge(Node *a, Node *b);
+void MergeSort(Node *head);
+Node *ShuffleMerge(Node *a, Node *b);
 #endif //JUSTP_LINKLISTPROBLEM_H
