@@ -289,6 +289,7 @@ void FrontBackSplit1(Node *source, Node **frontHead, Node **backHead) {
 }
 
 void RemoveDuplicates(Node *head) {
+	/* 用了三个指针去做这件事儿，说明啥呢，脑子还是没弄清楚，没弄到本质 */
 	Node* prev = head;
 	Node* cur = nullptr;
 	Node* next = nullptr;
@@ -309,11 +310,31 @@ void RemoveDuplicates(Node *head) {
 	}
 }
 
+void RemoveDuplicates1(Node *head) {
+	Node* cur = head;
+
+	if (cur == nullptr) {
+		return;
+	}
+
+	for (; cur->next != nullptr; cur = cur->next) {
+		if (cur->data == cur->next->data) {
+			Node* nextNode = cur->next->next;
+			cur->next->next = nullptr;
+			cur->next->data = 0;
+			free(cur->next);
+			cur->next = nextNode;
+		}
+	}
+}
+
 void MoveNode(Node **destHead, Node **sourceHead) {
 	if (*sourceHead == nullptr) {
 		return;
 	} else {
 		Node* movedNode = *sourceHead;
+
+		/* 下面这两句完全可以合成一句，不知道当时怎么想的 */
 		Node *newSourceHead = movedNode->next;
 		*sourceHead = newSourceHead;
 
@@ -322,11 +343,12 @@ void MoveNode(Node **destHead, Node **sourceHead) {
 	}
 }
 
-void AlternatingSplit(Node *source, Node **aHead, Node **bHead) {
+void AlternatingSplit2(Node *source, Node **aHead, Node **bHead) {
 	Node* cur = source;
 	bool front = true;
 	Node* next = nullptr;
 
+	/* 既然是连续的move，就不需要设置一个flag来判断了 */
 	for (; cur != nullptr; cur = next) {
 		next = cur->next;
 		if (front) {
@@ -339,6 +361,39 @@ void AlternatingSplit(Node *source, Node **aHead, Node **bHead) {
 	}
 }
 
+void AlternatingSplit1(Node *source, Node **aHead, Node **bHead) {
+	Node* a = nullptr;
+	Node* b = nullptr;
+	Node* cur = source;
+
+	while (cur != nullptr) {
+		MoveNode(&a, &cur);
+		if (cur != nullptr) {
+			MoveNode(&b, &cur);
+		}
+	}
+
+	*aHead = a;
+	*bHead = b;
+}
+
+/* 上面两种方式将链表分开时，其实是将链表节点的顺序刚好颠倒了，完全正序的将链表分开 */
+void AlternatingSplit(Node* source, Node** aHead, Node** bHead) {
+	Node** aTail = aHead;
+	Node** bTail = bHead;
+	Node* cur = source;
+
+	while (cur != nullptr) {
+		MoveNode(aTail, &cur);
+		aTail = &((*aTail)->next);
+		if (cur != nullptr) {
+			MoveNode(bTail, &cur);
+			bTail = &((*bTail)->next);
+		}
+	}
+}
+
+
 Node *ShuffleMerge(Node *a, Node *b) {
 	if (a == nullptr) {
 		return b;
@@ -347,21 +402,61 @@ Node *ShuffleMerge(Node *a, Node *b) {
 		return a;
 	}
 	Node* aCur = a;
+	Node* bCur = b;
 	Node* aNext = nullptr;
-	Node* aPrev = nullptr;
-	for (; aCur != nullptr; aCur = aNext) {
+	Node* curHead = nullptr;
+
+	for (; aCur->next != nullptr; aCur = aNext) {
 		aNext = aCur->next;
-		aCur->next = b;
-		MoveNode(&aNext, &b);
-		aCur->next = aNext;
-		aPrev = aCur;
+		curHead = aNext;
+		MoveNode(&curHead, &bCur);
+		aCur->next = curHead;
 	}
-	aPrev->next = b;
+
+	if (bCur) {
+		aCur->next = bCur;
+	}
+
 	return a;
 }
 
+/* don't use MoveNode() */
+Node *ShuffleMerge(Node *a, Node *b) {
+	if (a == nullptr) {
+		return b;
+	}
+	if (b == nullptr) {
+		return a;
+	}
+
+	Node* resultHead = nullptr;
+	Node** lastNodePtr = &resultHead;
+	Node* aCur = a;
+	Node* bCur = b;
+	Node* aNext = nullptr;
+	Node* bNext = nullptr;
+
+
+	for (; aCur != nullptr && bCur != nullptr; aCur = aNext, bCur = bNext) {
+		aNext = aCur->next;
+		bNext = bCur->next;
+		*lastNodePtr = aCur;
+		(*lastNodePtr)->next = bCur;
+		lastNodePtr = &((*lastNodePtr)->next->next);
+	}
+
+	if (aCur) {
+		*lastNodePtr = aCur;
+	}
+	if (bCur) {
+		*lastNodePtr = bCur;
+	}
+
+	return resultHead;
+}
+
 /* have a bug, change the b list */
-Node *SortedMerge(Node *a, Node *b) {
+Node *SortedMerge1(Node *a, Node *b) {
 	if (a == nullptr) {
 		return b;
 	}

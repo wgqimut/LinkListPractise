@@ -214,7 +214,7 @@ void AlternatingSplitTest() {
 	Weclome(__func__);
 
 	Node* myList = nullptr;
-	int a[] = {2, 3, 2, 3, 2, 3, 2};
+	int a[] = {2, 3, 4, 5, 6, 7, 8};
 
 	int length = sizeof(a) / sizeof(int);
 	for (int i = length - 1; i >= 0; --i) {
@@ -278,6 +278,7 @@ void ShuffleMergeTest() {
 	Weclome(__func__);
 	Node* aList = nullptr;
 	Node* bList = nullptr;
+	Node* resultList = nullptr;
 	int a[] = {1, 2, 3};
 	int b[] = {7, 13, 1};
 	aList = BuildList(a, LENGTH(a));
@@ -289,10 +290,10 @@ void ShuffleMergeTest() {
 	printf("b list:\n");
 	printList(bList);
 
-	ShuffleMerge(aList, bList);
+	resultList = ShuffleMerge(aList, bList);
 	printf("After merge list:");
-	printf("a list:\n");
-	printList(aList);
+	printf("result list:\n");
+	printList(resultList);
 	printf("b list:\n");
 	printList(bList);
 
