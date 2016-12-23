@@ -32,6 +32,6 @@ void RemoveDuplicates(Node *head);
 void MoveNode(Node **destHead, Node **sourceHead);
 void AlternatingSplit(Node *source, Node **aHead, Node **bHead);
 Node *SortedMerge(Node *a, Node *b);
-void MergeSort(Node *head);
+void MergeSort(Node **headRef);
 Node *ShuffleMerge(Node *a, Node *b);
 #endif //JUSTP_LINKLISTPROBLEM_H

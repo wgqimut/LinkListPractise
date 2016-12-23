@@ -241,8 +241,10 @@ void SortedMergeTest() {
 	Weclome(__func__);
 	Node* aList = nullptr;
 	Node* bList = nullptr;
-	int a[] = {1, 1, 2, 3, 4};
-	int b[] = {3, 4, 4, 5};
+//	int a[] = {1, 1, 2, 3, 4};
+//	int b[] = {3, 4, 4, 5};
+	int a[] = {1};
+	int b[] = {3};
 	aList = BuildList(a, LENGTH(a));
 	bList = BuildList(b, LENGTH(b));
 	printf("Before merge list:\n");
@@ -268,7 +270,7 @@ void MergeSortTest() {
 	printf("Before merge sort list:\n");
 	printList(myList);
 
-	MergeSort(myList);
+	MergeSort(&myList);
 	printf("After merge sort list:\n");
 	printList(myList);
 	End(__func__);

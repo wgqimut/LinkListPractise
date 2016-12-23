@@ -421,7 +421,7 @@ Node *ShuffleMerge(Node *a, Node *b) {
 }
 
 /* don't use MoveNode() */
-Node *ShuffleMerge(Node *a, Node *b) {
+Node *ShuffleMerge1(Node *a, Node *b) {
 	if (a == nullptr) {
 		return b;
 	}
@@ -455,7 +455,6 @@ Node *ShuffleMerge(Node *a, Node *b) {
 	return resultHead;
 }
 
-/* have a bug, change the b list */
 Node *SortedMerge1(Node *a, Node *b) {
 	if (a == nullptr) {
 		return b;
@@ -464,25 +463,98 @@ Node *SortedMerge1(Node *a, Node *b) {
 		return a;
 	}
 
+	/* 这里使用的二级指针，是一个非常典型的套路 */
+	Node* newHead = nullptr;
+	Node** cur = &newHead;
+
+	Node* aCur = a;
 	Node* bCur = b;
-	Node* prev = nullptr;
-	for (Node *cur = a; cur != nullptr; cur = cur->next) {
-		if (bCur->data < cur->data) {
-			MoveNode(&cur, &bCur);
-			if (prev) {
-				prev->next = cur;
-			} else {
-				a = cur;
-			}
-			return SortedMerge(a, bCur);
+	while (aCur != nullptr && bCur != nullptr) {
+		if (aCur->data < bCur->data) {
+			*cur = aCur;
+			aCur = aCur->next;
+		} else {
+			*cur = bCur;
+			bCur = bCur->next;
 		}
-		prev = cur;
+		cur = &((*cur)->next);
+
 	}
-	prev->next = bCur;
-	return a;
+
+	if (aCur) {
+		*cur = aCur;
+	} else {
+		*cur = bCur;
+	}
+
+	return newHead;
+
 }
 
-void MergeSort(Node *head) {
+/* dummy node版本
+ * 凡是可以使用二级指针解决的问题，都可以用dummy node来解决 */
+Node* SortedMerge(Node* a, Node* b) {
+	if (a == nullptr) {
+		return b;
+	}
+
+	if (b == nullptr) {
+		return a;
+	}
+
+	/* dummy node是一个temporary local node */
+	Node dummy;
+	Node* tail = &dummy;
+	Node* aCur = a;
+	Node* bCur = b;
+	dummy.next = nullptr;
+
+	while (aCur != nullptr && bCur != nullptr) {
+		if (aCur->data < bCur->data) {
+			tail->next = aCur;
+			aCur = aCur->next;
+		} else {
+			tail->next = bCur;
+			bCur = bCur->next;
+		}
+
+		tail = tail->next;
+	}
+
+	if (aCur) {
+		tail->next = aCur;
+	} else {
+		tail->next = bCur;
+	}
+
+	return dummy.next;
+
+}
+
+/* recursive version */
+Node *SortedMerge2(Node *a, Node *b) {
+	if (a == nullptr) {
+		return b;
+	}
+	if (b == nullptr) {
+		return a;
+	}
+
+	Node* newHead = nullptr;
+	if (a->data < b->data) {
+		newHead = a;
+		newHead->next = SortedMerge2(a->next, b);
+	} else {
+		newHead = b;
+		newHead->next = SortedMerge2(a, b->next);
+	}
+
+	return newHead;
+}
+
+
+void MergeSort(Node **headRef) {
+	Node* head = *headRef;
 	if (head == nullptr || head->next == nullptr) {
 		return;
 	}
@@ -490,7 +562,7 @@ void MergeSort(Node *head) {
 	Node* frontHead = nullptr;
 	Node* backHead = nullptr;
 	FrontBackSplit(head, &frontHead, &backHead);
-	MergeSort(frontHead);
-	MergeSort(backHead);
-	SortedMerge(frontHead, backHead);
+	MergeSort(&frontHead);
+	MergeSort(&backHead);
+	*headRef = SortedMerge(frontHead, backHead);
 }
