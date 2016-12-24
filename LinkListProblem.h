@@ -34,4 +34,7 @@ void AlternatingSplit(Node *source, Node **aHead, Node **bHead);
 Node *SortedMerge(Node *a, Node *b);
 void MergeSort(Node **headRef);
 Node *ShuffleMerge(Node *a, Node *b);
+Node *SortedIntersect(Node *a, Node *b);
+void Reverse(Node** head);
+
 #endif //JUSTP_LINKLISTPROBLEM_H

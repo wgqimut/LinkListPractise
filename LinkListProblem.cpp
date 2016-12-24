@@ -566,3 +566,97 @@ void MergeSort(Node **headRef) {
 	MergeSort(&backHead);
 	*headRef = SortedMerge(frontHead, backHead);
 }
+
+
+Node *SortedIntersect(Node *a, Node *b) {
+	Node* newHead = nullptr;
+	Node** cur = &newHead;
+
+	Node* aCur = a;
+	Node* bCur = b;
+	while (aCur != nullptr && bCur != nullptr) {
+		if (aCur->data == bCur->data) {
+			Push(cur, aCur->data);
+			aCur = aCur->next;
+			bCur = bCur->next;
+			cur = &((*cur)->next);
+		} else if (aCur->data < bCur->data) {
+			aCur = aCur->next;
+		} else {
+			bCur = bCur->next;
+		}
+	}
+
+	return newHead;
+}
+
+
+void Reverse(Node** head) {
+	/* 重新起一个link head就可以 */
+	Node* newHead = nullptr;
+
+	Node* cur = *head;
+	Node* next = nullptr;
+
+	for (; cur != nullptr; cur = next) {
+		next = cur->next;
+		cur->next = newHead;
+		newHead = cur;
+	}
+
+	*head = newHead;
+}
+
+
+/* 之所以没有写正确，是因为没有考虑两边的情况 */
+void Reverse1(Node **head) {
+	Node* prev = nullptr;
+	Node* cur = nullptr;
+	Node* next = nullptr;
+
+	/* 为什么不写成
+	 * for (cur = prev->next, next = cur->next; next != nullptr; prev = cur, cur = next, next = next->next) 呢？
+	 * 因为next为nullptr，还要走一步cur->next = prev, 所以这个循环的主体其实是cur，cur不为nullptr，这个循环就应该继续进行 */
+	/* cur是主体，所以这里应该将cur赋值为*head */
+	for(cur = *head; cur != nullptr; prev = cur, cur = next) {
+		next = cur->next;
+		cur->next = prev;
+	}
+
+	*head = prev;
+}
+
+
+/* 自己写的错误版本 */
+void Reverse1_false(Node **head) {
+	if (*head == nullptr || (*head)->next == nullptr) {
+		return;
+	}
+
+	Node* prev = *head;
+	Node* cur = nullptr;
+	Node* next = nullptr;
+
+	for(cur = prev->next; cur != nullptr; prev = cur, cur = next) {
+		next = cur->next;
+		prev->next = nullptr;
+		cur->next = prev;
+	}
+
+	*head = prev;
+}
+
+/* recursive version 这个版本对于recursion要有理解？ */
+void Reverse2(Node** head) {
+	if (*head == nullptr || (*head)->next == nullptr) {
+		return;
+	}
+
+	Node* next = (*head)->next;
+	Reverse2(&next);
+
+	next->next = *head;
+	(*head)->next = nullptr;
+
+	*head = next;
+}

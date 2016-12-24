@@ -303,6 +303,51 @@ void ShuffleMergeTest() {
 	End(__func__);
 }
 
+void SortedIntersectTest() {
+	Weclome(__func__);
+
+	Node *aList = nullptr;
+	Node *bList = nullptr;
+	Node* resultList = nullptr;
+	int a[] = {1, 2, 3, 6, 8};
+	int b[] = {3, 3, 8, 10};
+	aList = BuildList(a, LENGTH(a));
+	bList = BuildList(b, LENGTH(a));
+
+	printf("Before sort intersect list:\n");
+	printf("a list:\n");
+	printList(aList);
+	printf("b list:\n");
+	printList(bList);
+
+	resultList = SortedIntersect(aList, bList);
+	printf("After sort intersect list:\n");
+	printf("result list:\n");
+	printList(resultList);
+	printf("a list:\n");
+	printList(aList);
+	printf("b list:\n");
+	printList(bList);
+
+	End(__func__);
+}
+
+void ReverseTest() {
+	Weclome(__func__);
+	Node* head;
+
+	int a[] = {1, 2, 3};
+	head = BuildList(a, LENGTH(a));
+	printf("Before reverse list:\n");
+	printList(head);
+	Reverse(&head);
+	printf("After reverse list:\n");
+	printList(head);
+	DeleteList(&head);
+
+	End(__func__);
+}
+
 int main()
 {
 	Node* newList = nullptr;
@@ -328,6 +373,8 @@ int main()
 	SortedMergeTest();
 	MergeSortTest();
 	ShuffleMergeTest();
+	SortedIntersectTest();
+	ReverseTest();
 
 	return 0;
 }
