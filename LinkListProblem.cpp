@@ -705,3 +705,26 @@ int FindMergeNode(Node *headA, Node *headB)
 	// Complete this function
 	// Do not write the main method.
 }
+
+/*这种解法虽然代码看上去简洁但是不好理解，而且这个也不能得出position的位置 */
+int FindMergeNode1(Node *headA, Node *headB)
+{
+	Node* curA = headA;
+	Node* curB = headB;
+
+	while (curA != curB) {
+		if (curA->next != nullptr) {
+			curA = curA->next;
+		} else {
+			curA = headB;
+		}
+
+		if (curB->next != nullptr) {
+			curB = curB->next;
+		} else {
+			curB = headA;
+		}
+	}
+
+	return curA->data;
+}
