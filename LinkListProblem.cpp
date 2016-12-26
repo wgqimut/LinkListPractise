@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <cassert>
 #include "LinkListProblem.h"
+#include <iostream>
 
 void Push(Node** listHead, int newData) {
 	Node *newNode = new Node();
@@ -659,4 +660,48 @@ void Reverse2(Node** head) {
 	(*head)->next = nullptr;
 
 	*head = next;
+}
+
+int FindMergeNode(Node *headA, Node *headB)
+{
+	int lengthA = 0;
+	int lengthB = 0;
+
+	for(Node* curA = headA; curA != nullptr; curA = curA->next) {
+		++lengthA;
+	}
+	for(Node* curB = headB; curB != nullptr; curB = curB->next) {
+		++lengthB;
+	}
+
+	int n = 0;
+	Node* curShort = nullptr;
+	Node* curLong = nullptr;
+	if (lengthA > lengthB) {
+		n = lengthA - lengthB;
+		curLong = headA;
+		curShort = headB;
+	} else {
+		n = lengthB - lengthA;
+		curLong = headB;
+		curShort = headA;
+	}
+
+	for (int i = 0; i < n; ++i) {
+		curLong = curLong->next;
+	}
+
+	int position = n + 1;
+	while (curShort != nullptr) {
+		if (curLong == curShort) {
+			break;
+		}
+		curLong = curLong->next;
+		curShort = curShort->next;
+		++position;
+	}
+
+	return position;
+	// Complete this function
+	// Do not write the main method.
 }

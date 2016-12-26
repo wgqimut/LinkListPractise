@@ -37,4 +37,6 @@ Node *ShuffleMerge(Node *a, Node *b);
 Node *SortedIntersect(Node *a, Node *b);
 void Reverse(Node** head);
 
+int FindMergeNode(Node *headA, Node *headB);
+
 #endif //JUSTP_LINKLISTPROBLEM_H

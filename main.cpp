@@ -348,6 +348,31 @@ void ReverseTest() {
 	End(__func__);
 }
 
+void FindMergeNodeTest() {
+	Weclome(__func__);
+	Node* headA;
+	Node* headB;
+
+	int a[] = {1, 4, 5, 6, 7};
+	int b[] = {9, 5};
+	headA = BuildList(a, LENGTH(a));
+	Node* temp = headA;
+	for (int i = 0; i < 3; ++i) {
+		temp = temp->next;
+	}
+
+	headB = BuildList(b, LENGTH(b));
+	Node* tempB = headB;
+	while (tempB->next != nullptr) {
+		tempB = tempB->next;
+	}
+	tempB->next = temp;
+	int pos = FindMergeNode(headA, headB);
+	printf("the position is %d\n", pos);
+
+	End(__func__);
+}
+
 int main()
 {
 	Node* newList = nullptr;
@@ -375,6 +400,7 @@ int main()
 	ShuffleMergeTest();
 	SortedIntersectTest();
 	ReverseTest();
+	FindMergeNodeTest();
 
 	return 0;
 }
