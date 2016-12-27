@@ -9,6 +9,12 @@ typedef struct Node {
     int data;
     struct Node* next;
 } Node;
+
+typedef struct DoubleNode {
+    int data;
+    struct DoubleNode* next;
+    struct DoubleNode* prev;
+} DoubleNode;
 #define LENGTH(arr) (sizeof(arr) / sizeof(int))
 
 void Push(Node** listHead, int newData);
@@ -38,5 +44,7 @@ Node *SortedIntersect(Node *a, Node *b);
 void Reverse(Node** head);
 
 int FindMergeNode(Node *headA, Node *headB);
+
+DoubleNode* SortedInsert(DoubleNode *head,int data)
 
 #endif //JUSTP_LINKLISTPROBLEM_H

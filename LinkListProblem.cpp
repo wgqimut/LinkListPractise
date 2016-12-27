@@ -191,7 +191,6 @@ void SortedInsert(Node **head, Node *newNode) {
 
 void SortedInsert1(Node **head, Node *newNode) {
 	Node* cur = *head;
-	Node* prev = nullptr;
 
 	if (cur == nullptr || cur->data >= newNode->data) {
 		newNode->next = *head;
@@ -727,4 +726,94 @@ int FindMergeNode1(Node *headA, Node *headB)
 	}
 
 	return curA->data;
+}
+
+
+/* 双向链表有序插入，这个也不难啊，为什么就半天写不对呢
+ *
+ * 看了上面的单链表soretedinsert，终于明白了：自己写单链表的时候就写的很麻烦，看完参考答案才觉得人家写得好
+ * 然而并没有真正的想清楚*/
+DoubleNode* SortedInsert(DoubleNode *head,int data)
+{
+	DoubleNode* newNode = new DoubleNode();
+	newNode->data = data;
+	if (head == nullptr) {
+		newNode->next = nullptr;
+		newNode->prev = nullptr;
+		head = newNode;
+		return head;
+	}
+
+	if (head->data > data) {
+		newNode->next = head;
+		newNode->prev = nullptr;
+		head->prev = newNode;
+		head = newNode;
+
+		return head;
+	}
+
+	DoubleNode* prev = nullptr;
+	DoubleNode* cur = head;
+	while (cur != nullptr && cur->data < data) {
+		prev = cur;
+		cur = cur->next;
+	}
+
+	if (cur == nullptr) {
+		newNode->next = nullptr;
+		newNode->prev = prev;
+
+		prev->next = newNode;
+	} else {
+		newNode->next = cur;
+		newNode->prev = prev;
+
+		cur->prev = newNode;
+		prev->next = newNode;
+	}
+
+	return head;
+	// Complete this function
+	// Do not write the main method.
+
+}
+
+/* 看了上面单链表的实现，将上面的方法改的更简洁了一些 */
+DoubleNode* SortedInsert1(DoubleNode *head,int data) {
+	DoubleNode *newNode = new DoubleNode();
+	newNode->data = data;
+
+	if (head == nullptr) {
+		newNode->next = nullptr;
+		newNode->prev = nullptr;
+		head = newNode;
+		return head;
+	}
+
+	if (head->data > data) {
+		newNode->next = head;
+		newNode->prev = nullptr;
+		head->prev = newNode;
+		head = newNode;
+
+		return head;
+	}
+
+	DoubleNode *cur = nullptr;
+	for (cur = head; cur->next != nullptr && cur->next->data < data; cur = cur->next) {
+	}
+
+	newNode->next = cur->next;
+	newNode->prev = cur;
+
+	if (cur->next) {
+		cur->next->prev = newNode;
+	}
+	cur->next = newNode;
+
+	return head;
+	// Complete this function
+	// Do not write the main method.
+
 }
