@@ -15,6 +15,13 @@ typedef struct DoubleNode {
     struct DoubleNode* next;
     struct DoubleNode* prev;
 } DoubleNode;
+
+typedef struct RandomNode {
+    int data;
+    struct RandomNode* next;
+    struct RandomNode* random;
+} RandomNode;
+
 #define LENGTH(arr) (sizeof(arr) / sizeof(int))
 
 void Push(Node** listHead, int newData);
@@ -45,6 +52,9 @@ void Reverse(Node** head);
 
 int FindMergeNode(Node *headA, Node *headB);
 
-DoubleNode* SortedInsert(DoubleNode *head,int data)
+DoubleNode* SortedInsert(DoubleNode *head,int data);
+RandomNode* CopyRandomList(RandomNode* head);
+void PrintRandomList(RandomNode* head);
+
 
 #endif //JUSTP_LINKLISTPROBLEM_H

@@ -5,6 +5,7 @@
 #include <cstdio>
 #include <cassert>
 #include "LinkListProblem.h"
+#include <map>
 #include <iostream>
 
 void Push(Node** listHead, int newData) {
@@ -135,7 +136,8 @@ void InsertNth1(Node **head, int index, int newData) {
 	Push(&(curPtr->next), newData);
 }
 
-void printList(Node* head) {
+
+void printList(Node *head) {
 	for (Node* cur = head; cur != nullptr; cur = cur->next) {
 		printf("%d\n", cur->data);
 	}
@@ -813,7 +815,36 @@ DoubleNode* SortedInsert1(DoubleNode *head,int data) {
 	cur->next = newNode;
 
 	return head;
-	// Complete this function
-	// Do not write the main method.
+}
 
+
+void PrintRandomList(RandomNode *head) {
+	RandomNode* cur = nullptr;
+
+	for (cur = head; cur != nullptr; cur = cur->next) {
+		printf("data = %d, random data = %d\n", cur->data, cur->random->data);
+	}
+}
+
+RandomNode *CopyRandomList(RandomNode *head) {
+	std::map<RandomNode*, RandomNode*> listMap;
+	RandomNode* cur = head;
+	RandomNode* newHead;
+	RandomNode** newCur = &newHead;
+
+	for (; cur != nullptr; cur = cur->next) {
+		RandomNode* newNode = new RandomNode();
+		newNode->data = cur->data;
+		newNode->next = cur->next;
+		newNode->random = nullptr;
+		listMap[cur] = newNode;
+		*newCur = newNode;
+		newCur = &((*newCur)->next);
+	}
+
+	for(cur = head; cur != nullptr; cur = cur->next) {
+		listMap[cur]->random = cur->random;
+	}
+
+	return newHead;
 }

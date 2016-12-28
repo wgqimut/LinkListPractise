@@ -1,4 +1,5 @@
 #include <iostream>
+#include <map>
 //#include "MyStack.h"
 #include "LinkListProblem.h"
 
@@ -373,6 +374,38 @@ void FindMergeNodeTest() {
 	End(__func__);
 }
 
+void CopyRandomListTest() {
+	Weclome(__func__);
+	RandomNode* newHead;
+	RandomNode** curRef = &newHead;
+	std::map<int, RandomNode*> numNodeMap;
+
+	for (int i = 0; i < 10; ++i) {
+		RandomNode *newNode = new RandomNode();
+		numNodeMap[i] = newNode;
+		newNode->data = i;
+		newNode->next = nullptr;
+		*curRef = newNode;
+		curRef = &((*curRef)->next);
+	}
+
+	RandomNode* cur = nullptr;
+	std::srand(std::time(0));
+	for (cur = newHead; cur != nullptr; cur = cur->next) {
+		cur->random = numNodeMap[std::rand() % 10];
+	}
+	printf("Before copy, old list is:\n");
+	PrintRandomList(newHead);
+
+	RandomNode* newNewHead;
+	newNewHead = CopyRandomList(newHead);
+	printf("After copy, old list is:\n");
+	PrintRandomList(newHead);
+	printf("new list is:\n");
+	PrintRandomList(newNewHead);
+	End(__func__);
+}
+
 int main()
 {
 	Node* newList = nullptr;
@@ -401,6 +434,7 @@ int main()
 	SortedIntersectTest();
 	ReverseTest();
 	FindMergeNodeTest();
+	CopyRandomListTest();
 
 	return 0;
 }
