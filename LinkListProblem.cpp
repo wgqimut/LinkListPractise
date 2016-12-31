@@ -938,3 +938,37 @@ RandomNode* CopyRandomList(RandomNode* head) {
 	return newHead;
 }
 
+/* 输入一个单向链表，判断链表是否有环。如果链表存在环，如何找到环的入口点？
+ * 这个纯粹就是一个数学题，通过快慢指针的方法可以判断出一个链表是否有环，那么怎么找到环的入口点呢？算一下就知道了，
+ * 假设链表头距离入口的距离为a，快指针和慢指针相遇的地方距离入口为b，环的周长为l，慢指针走了n步后相遇，我们发现：
+ * a + b = n; a+b+k*l = 2*n, 也就是a+b = k*l = n，所以如果从相遇点再走n步，就又回到相遇点（k*l）
+ * 那么，如果让一个指针从相遇点出发，另一个指针从开头出发，这两个指针的相遇点一定是入口。 a = n-b = k*l-b */
+
+Node *GetEntryOfLoopLinkList(Node *head) {
+	if (head == nullptr || head->next == nullptr) {
+		return nullptr;
+	}
+
+	Node *slow = head;
+	Node *fast = head;
+	while (fast != nullptr && fast->next != nullptr) {
+		slow = slow->next;
+		fast = fast->next->next;
+
+		if (fast == slow){
+			break;
+		}
+	}
+
+	if (fast != slow) {
+		return nullptr;
+	}
+
+	fast = head;
+	while (fast != slow) {
+		fast = fast->next;
+		slow = slow->next;
+	}
+
+	return fast;
+}

@@ -55,6 +55,7 @@ int FindMergeNode(Node *headA, Node *headB);
 DoubleNode* SortedInsert(DoubleNode *head,int data);
 RandomNode* CopyRandomList(RandomNode* head);
 void PrintRandomList(RandomNode* head);
+Node* GetEntryOfLoopLinkList(Node* head);
 
 
 #endif //JUSTP_LINKLISTPROBLEM_H

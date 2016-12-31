@@ -408,6 +408,31 @@ void CopyRandomListTest() {
 	End(__func__);
 }
 
+void GetEntryOfLoopLinkListTest() {
+	Weclome(__func__);
+
+	/* build a link list with a loop */
+	Node* newHead;
+	int a[] = {3, 2, 6, 9, 4, 6, 0, 7};
+	newHead = BuildList(a, LENGTH(a));
+	int entry = LENGTH(a) / 2;
+	Node* entryNode  = newHead;
+	Node *cur = newHead;
+	for (int i = 0; i < entry; ++i) {
+		entryNode = entryNode->next;
+	}
+	for (; cur->next != nullptr; cur = cur->next) {}
+	cur->next = entryNode;
+
+	Node *resultNode = GetEntryOfLoopLinkList(newHead);
+	if (resultNode == entryNode) {
+		printf("SUCCESS to get entry of loop link list.\n");
+	} else {
+		printf("FAILED to get entry of loop link list.\n");
+	}
+	End(__func__);
+}
+
 int main()
 {
 	Node* newList = nullptr;
@@ -437,6 +462,7 @@ int main()
 	ReverseTest();
 	FindMergeNodeTest();
 	CopyRandomListTest();
+	GetEntryOfLoopLinkListTest();
 
 	return 0;
 }
