@@ -826,7 +826,7 @@ void PrintRandomList(RandomNode *head) {
 	}
 }
 
-RandomNode *CopyRandomList(RandomNode *head) {
+RandomNode *CopyRandomList1(RandomNode *head) {
 	std::map<RandomNode*, RandomNode*> listMap;
 	RandomNode* cur = head;
 	RandomNode* newHead;
@@ -844,6 +844,52 @@ RandomNode *CopyRandomList(RandomNode *head) {
 
 	for(cur = head; cur != nullptr; cur = cur->next) {
 		listMap[cur]->random = cur->random;
+	}
+
+	return newHead;
+}
+
+/* 这个题目的关键在于，如何保存旧节点和新节点的对应关系，以复制旧节点random的部分
+ * 现在看来，要么是构建hash表去存储对应关系，要么是，将链表构建成交替链表，来保存新旧节点的对应关系*/
+RandomNode* CopyRandomList(RandomNode* head) {
+	RandomNode* newHead = nullptr;
+	RandomNode* cur = head;
+
+	if (head == nullptr) {
+		return nullptr;
+	}
+
+	while (cur!= nullptr) {
+		RandomNode *next = cur->next;
+		RandomNode *newNode = new RandomNode();
+		newNode->data = cur->data;
+		newNode->next = next;
+		cur->next = newNode;
+
+		cur = next;
+	}
+
+	cur = head;
+	while (cur != nullptr && cur->next != nullptr) {
+		cur->next->random = cur->random->next;
+		cur = cur->next->next;
+	}
+
+	cur = head;
+	RandomNode **newCur = &newHead;
+	while (cur != nullptr && cur->next != nullptr) {
+		RandomNode* newNode = cur->next;
+		cur->next = newNode->next;
+		if (cur->next) {
+			newNode->next = newNode->next->next;
+
+		} else {
+			newNode->next = nullptr;
+		}
+		*newCur = newNode;
+
+		cur = cur->next;
+		newCur = &((*newCur)->next);
 	}
 
 	return newHead;
