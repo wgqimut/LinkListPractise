@@ -851,13 +851,9 @@ RandomNode *CopyRandomList1(RandomNode *head) {
 
 /* 这个题目的关键在于，如何保存旧节点和新节点的对应关系，以复制旧节点random的部分
  * 现在看来，要么是构建hash表去存储对应关系，要么是，将链表构建成交替链表，来保存新旧节点的对应关系*/
-RandomNode* CopyRandomList(RandomNode* head) {
+RandomNode* CopyRandomList2(RandomNode* head) {
 	RandomNode* newHead = nullptr;
 	RandomNode* cur = head;
-
-	if (head == nullptr) {
-		return nullptr;
-	}
 
 	while (cur!= nullptr) {
 		RandomNode *next = cur->next;
@@ -877,6 +873,10 @@ RandomNode* CopyRandomList(RandomNode* head) {
 
 	cur = head;
 	RandomNode **newCur = &newHead;
+	/* 这个while循环的循环条件cur->next != nullptr和循环体里的cur->next代表的是不同的东西，
+	 * 前者代表合成的这个链表的next节点，而后者则是原链表的next节点,
+	 * 这样写不容易理解，这也说明写的时候脑子里不是很清楚，虽然最后结果的是对的，但是这个代码确实是
+	 * 很糟糕的，下面有更好的版本 */
 	while (cur != nullptr && cur->next != nullptr) {
 		RandomNode* newNode = cur->next;
 		cur->next = newNode->next;
@@ -894,3 +894,47 @@ RandomNode* CopyRandomList(RandomNode* head) {
 
 	return newHead;
 }
+
+RandomNode* CopyRandomList(RandomNode* head) {
+	RandomNode* newHead = nullptr;
+	RandomNode* cur = head;
+
+	while (cur!= nullptr) {
+		RandomNode *next = cur->next;
+		RandomNode *newNode = new RandomNode();
+		newNode->data = cur->data;
+		newNode->next = next;
+		cur->next = newNode;
+
+		cur = next;
+	}
+
+	cur = head;
+	/* 比上面的那个实现方法不知道逻辑清晰到哪里去 */
+	while (cur != nullptr) {
+		RandomNode *clonedNode = cur->next;
+		if (cur->random) {
+			clonedNode->random = cur->random->next;
+		}
+
+		cur = clonedNode->next;
+	}
+
+	cur = head;
+	RandomNode **newCur = &newHead;
+	if (cur != nullptr) {
+		*newCur = cur->next;
+		cur->next = (*newCur)->next;
+		cur = cur->next;
+	}
+	/* 这里的cur指的就是原链表的节点 */
+	while (cur != nullptr) {
+		(*newCur)->next = cur->next;
+		newCur = &((*newCur)->next);
+		cur->next = (*newCur)->next;
+		cur = cur->next;
+	}
+
+	return newHead;
+}
+
