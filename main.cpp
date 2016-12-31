@@ -4,6 +4,8 @@
 #include <map>
 //#include "MyStack.h"
 #include "LinkListProblem.h"
+#include "global.h"
+#include "Sort.h"
 
 void Weclome(const char* func_name) {
 	printf("\nWeclome %s world....\n", func_name);
@@ -435,6 +437,7 @@ void GetEntryOfLoopLinkListTest() {
 
 int main()
 {
+#if LINKLISTP
 	Node* newList = nullptr;
 	newList = BuildSimpleList();
 
@@ -463,6 +466,13 @@ int main()
 	FindMergeNodeTest();
 	CopyRandomListTest();
 	GetEntryOfLoopLinkListTest();
+#endif
+
+#if SORT
+	//sort test
+	SortTest(BubbleSort);
+	SortTest(InsertionSort);
+#endif
 
 	return 0;
 }

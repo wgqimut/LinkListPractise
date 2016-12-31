@@ -762,18 +762,12 @@ DoubleNode* SortedInsert(DoubleNode *head,int data)
 		cur = cur->next;
 	}
 
-	if (cur == nullptr) {
-		newNode->next = nullptr;
-		newNode->prev = prev;
-
-		prev->next = newNode;
-	} else {
-		newNode->next = cur;
-		newNode->prev = prev;
-
+	newNode->next = cur;
+	newNode->prev = prev;
+	if (cur) {
 		cur->prev = newNode;
-		prev->next = newNode;
 	}
+	prev->next = newNode;
 
 	return head;
 	// Complete this function
